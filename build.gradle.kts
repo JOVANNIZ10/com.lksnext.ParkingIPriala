@@ -9,5 +9,9 @@ sonar {
     properties {
         property("sonar.projectKey", "JOVANNIZ10_com.lksnext.ParkingIPriala")
         property("sonar.organization", "jovanniz10")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.sources", "app/src/main/java")
+        property("sonar.java.binaries", "app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes")
+        property("sonar.android.lint.report", "app/build/reports/lint-results-debug.xml")
     }
 }
