@@ -9,10 +9,10 @@ import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 
 
-class AuthRepository {
-    private val auth: FirebaseAuth = Firebase.auth
-    private val db = Firebase.firestore
-
+class AuthRepository(
+    private val auth: FirebaseAuth = Firebase.auth,
+    private val db: FirebaseFirestore = Firebase.firestore
+) {
     suspend fun registerUser(
         email: String,
         password: String,

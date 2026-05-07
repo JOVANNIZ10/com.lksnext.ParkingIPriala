@@ -15,8 +15,9 @@ sealed class LoginState {
     data class PasswordResetSent(val email: String) : LoginState()
 }
 
-class LoginViewModel : ViewModel() {
-    private val repository = AuthRepository()
+class LoginViewModel(
+    private val repository: AuthRepository = AuthRepository()
+) : ViewModel() {
 
     private val _state = MutableStateFlow<LoginState>(LoginState.Idle)
     val state: StateFlow<LoginState> = _state

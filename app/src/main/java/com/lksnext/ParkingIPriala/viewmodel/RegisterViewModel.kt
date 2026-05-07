@@ -15,8 +15,9 @@ sealed class RegisterState {
     data class Error(val message: String) : RegisterState()
 }
 
-class RegisterViewModel : ViewModel() {
-    private val repository = AuthRepository()
+class RegisterViewModel(
+    private val repository: AuthRepository = AuthRepository()
+) : ViewModel() {
 
     private val _state = MutableStateFlow<RegisterState>(RegisterState.Idle)
     val state: StateFlow<RegisterState> = _state
