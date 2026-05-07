@@ -1,4 +1,4 @@
-package com.lksnext.ParkingIPriala.ui.theme
+package com.lksnext.ParkingIPriala.ui.themes
 
 import androidx.compose.ui.graphics.Color
 
