@@ -27,7 +27,7 @@ class LoginViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = LoginViewModel(repository)
+        viewModel = LoginViewModel(repository, testDispatcher)
     }
 
     @After
@@ -57,21 +57,21 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `resetPassword returns PasswordResetSent when repository succeeds`() = runTest(testDispatcher) {
+    fun `sendResetPasswordEmail returns PasswordResetEmailSent when repository succeeds`() = runTest(testDispatcher) {
         runBlocking { whenever(repository.resetPassword("test@test.com")).thenReturn(Result.success(Unit)) }
 
-        viewModel.resetPassword("test@test.com")
+        viewModel.sendResetPasswordEmail("test@test.com")
         advanceUntilIdle()
 
-        assertTrue(viewModel.state.value is LoginState.PasswordResetSent)
-        assertEquals("test@test.com", (viewModel.state.value as LoginState.PasswordResetSent).email)
+        assertTrue(viewModel.state.value is LoginState.PasswordResetEmailSent)
+        assertEquals("test@test.com", (viewModel.state.value as LoginState.PasswordResetEmailSent).email)
     }
 
     @Test
-    fun `resetPassword returns Error when repository fails`() = runTest(testDispatcher) {
+    fun `sendResetPasswordEmail returns Error when repository fails`() = runTest(testDispatcher) {
         runBlocking { whenever(repository.resetPassword("test@test.com")).thenReturn(Result.failure(Exception("Error"))) }
 
-        viewModel.resetPassword("test@test.com")
+        viewModel.sendResetPasswordEmail("test@test.com")
         advanceUntilIdle()
 
         assertTrue(viewModel.state.value is LoginState.Error)

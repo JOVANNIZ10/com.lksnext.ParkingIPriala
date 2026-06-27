@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "685717983618",
+    "project_id": "com-lksnext-parkingipria-74875",
+    "storage_bucket": "com-lksnext-parkingipria-74875.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:685717983618:android:3652113390e16b9aa6ff9b",
+        "android_client_info": {
+          "package_name": "com.lksnext.ParkingIPriala"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCfHMdAs5bGt_CDgM2CtJLN__xN4uOKY4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

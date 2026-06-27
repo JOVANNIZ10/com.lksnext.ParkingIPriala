@@ -1,60 +1,32 @@
 package com.lksnext.ParkingIPriala.ui.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.lksnext.ParkingIPriala.R
 
-val AuthBgDeep = Color(0xFF080D1A)
-val AuthBgCard = Color(0xFF0F1726)
-val AuthBorderColor = Color(0xFF1A2235)
-val AuthTextPrimary = Color(0xFFE4ECF7)
-val AuthTextMuted = Color(0xFF4A6080)
-val AuthAccentBlue = Color(0xFF2563EB)
+val AuthBgGreenCard = Color(0xFFD7EE46)
+val AuthTextBlack = Color(0xFF000000)
 
 @Composable
-fun AuthLogo() {
+fun HeaderBackground(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
-            .size(90.dp)
-            .clip(CircleShape)
-            .background(
-                Brush.linearGradient(listOf(Color(0xFF1D4ED8), Color(0xFF7C3AED)))
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.parking_logo),
-            contentDescription = "Logo",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.size(56.dp)
-        )
-    }
-}
-
-@Composable
-fun AuthTitle(text: String = "ParkingIPriala") {
-    Text(
-        text = text,
-        fontSize = 32.sp,
-        fontWeight = FontWeight.ExtraBold,
-        color = AuthTextPrimary
+        modifier = modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
+            .background(AuthBgGreenCard)
     )
 }
 
@@ -63,27 +35,57 @@ fun AuthTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label, color = AuthTextMuted) },
-        modifier = modifier.fillMaxWidth(),
+        placeholder = { Text(label, color = Color.Gray) },
+        modifier = Modifier.fillMaxWidth(),
         singleLine = true,
-        visualTransformation = visualTransformation,
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(10.dp),
+        textStyle = LocalTextStyle.current.copy(color = Color(0xFF060606)),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = AuthTextPrimary,
-            unfocusedTextColor = AuthTextPrimary,
-            focusedBorderColor = AuthAccentBlue,
-            unfocusedBorderColor = AuthBorderColor,
-            cursorColor = AuthAccentBlue,
-            focusedContainerColor = AuthBgCard,
-            unfocusedContainerColor = AuthBgCard,
-            focusedLabelColor = AuthAccentBlue,
-            unfocusedLabelColor = AuthTextMuted
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            focusedBorderColor = Color(0xFF060606),
+            unfocusedBorderColor = Color(0xFFAAAAAA),
+            cursorColor = Color(0xFFD7EE46)
+        )
+    )
+}
+
+@Composable
+fun AuthPasswordField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+) {
+    var passwordVisible by remember { mutableStateOf(false) }
+
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        placeholder = { Text(label, color = Color.Gray) },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+        shape = RoundedCornerShape(10.dp),
+        textStyle = LocalTextStyle.current.copy(color = Color(0xFF060606)),
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = {
+            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                Icon(
+                    imageVector = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                    contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                    tint = Color(0xFF060606)
+                )
+            }
+        },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            focusedBorderColor = Color(0xFF060606),
+            unfocusedBorderColor = Color(0xFFAAAAAA),
+            cursorColor = Color(0xFFD7EE46)
         )
     )
 }
@@ -92,40 +94,17 @@ fun AuthTextField(
 fun AuthButton(
     text: String,
     isLoading: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth().height(50.dp),
-        shape = RoundedCornerShape(12.dp),
-        enabled = !isLoading,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = AuthAccentBlue,
-            disabledContainerColor = AuthAccentBlue.copy(alpha = 0.5f)
-        )
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(55.dp),
+        shape = RoundedCornerShape(10.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = AuthBgGreenCard)
     ) {
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(24.dp),
-                strokeWidth = 2.dp,
-                color = Color.White
-            )
-        } else {
-            Text(text, color = Color.White, fontWeight = FontWeight.SemiBold)
-        }
+        if (isLoading) CircularProgressIndicator(modifier = Modifier.size(24.dp), color = AuthTextBlack)
+        else Text(text, color = AuthTextBlack, fontWeight = FontWeight.Black)
     }
-}
-
-@Composable
-fun AuthClickableText(
-    text: String,
-    onClick: () -> Unit
-) {
-    Text(
-        text = text,
-        modifier = Modifier.clickable(onClick = onClick),
-        color = AuthAccentBlue,
-        textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline
-    )
 }

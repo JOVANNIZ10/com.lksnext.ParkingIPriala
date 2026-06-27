@@ -2,14 +2,18 @@ package com.lksnext.ParkingIPriala.ui.auth
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -19,6 +23,7 @@ import com.lksnext.ParkingIPriala.viewmodel.LoginViewModel
 @Composable
 fun LoginScreen(
     onNavigateToRegister: () -> Unit,
+    onNavigateToForgotPassword: () -> Unit,
     onLoginSuccess: () -> Unit,
     viewModel: LoginViewModel = viewModel()
 ) {
@@ -32,84 +37,85 @@ fun LoginScreen(
             is LoginState.Success -> {
                 Toast.makeText(context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
                 onLoginSuccess()
+                viewModel.resetState()
             }
             is LoginState.Error -> {
                 Toast.makeText(context, (state as LoginState.Error).message, Toast.LENGTH_LONG).show()
-            }
-            is LoginState.PasswordResetSent -> {
-                Toast.makeText(context, "Email de recuperación enviado a ${(state as LoginState.PasswordResetSent).email}", Toast.LENGTH_LONG).show()
-                viewModel.login(email, password)
+                viewModel.resetState()
             }
             else -> Unit
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AuthBgDeep)
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        AuthLogo()
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xFFEFEFEF))) {
+        HeaderBackground()
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp)
+                .align(Alignment.Center),
+            shape = RoundedCornerShape(10.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(4.dp)
+        ) {
+            Column(modifier = Modifier.padding(32.dp)) {
+                Text(
+                    "LOGIN",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Black,
+                    color = Color(0xFF060606),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(40.dp))
 
-        AuthTitle()
+                AuthTextField(email, { email = it }, "Email")
+                Spacer(modifier = Modifier.height(16.dp))
+                AuthPasswordField(password, { password = it }, "Contraseña")
 
-        Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-        AuthTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = "Email"
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        AuthTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = "Contraseña",
-            visualTransformation = PasswordVisualTransformation()
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        AuthClickableText(
-            text = "¿Has olvidado la contraseña?",
-            onClick = {
-                if (email.isNotEmpty()) {
-                    viewModel.resetPassword(email)
-                } else {
-                    Toast.makeText(context, "Ingresa tu email primero", Toast.LENGTH_SHORT).show()
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        "¿Olvidaste tu contraseña?",
+                        color = Color(0xFFD7EE46),
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.clickable { 
+                            onNavigateToForgotPassword()
+                        },
+                        textDecoration = TextDecoration.Underline
+                    )
                 }
-            }
-        )
 
-        Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-        AuthButton(
-            text = "Iniciar sesión",
-            isLoading = state is LoginState.Loading,
-            onClick = {
-                when {
-                    email.isEmpty() || password.isEmpty() -> {
-                        Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {
+                AuthButton("INICIAR SESIÓN", state is LoginState.Loading) {
+                    if (email.isEmpty() || password.isEmpty()) {
+                        Toast.makeText(context, "Completa los campos", Toast.LENGTH_SHORT).show()
+                    } else {
                         viewModel.login(email, password)
                     }
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text("¿No tienes cuenta? ", color = Color(0xFF060606))
+                    Text(
+                        "Regístrate",
+                        color = Color(0xFFD7EE46),
+                        fontWeight = FontWeight.Bold,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.clickable { onNavigateToRegister() }
+                    )
+                }
             }
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        AuthClickableText(
-            text = "¿No tienes cuenta? Regístrate",
-            onClick = onNavigateToRegister
-        )
+        }
     }
 }
