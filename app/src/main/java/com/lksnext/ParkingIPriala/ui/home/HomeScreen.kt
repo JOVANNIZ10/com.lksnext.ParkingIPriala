@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun HomeScreen(onLogout: () -> Unit) {
-    // Estado para controlar qué sección está seleccionada
+    // Estado para controlar qué sección lateral está seleccionada
     // 0: Home, 1: Reservas, 2: Historial, 3: Perfil, 4: Nueva Reserva (+)
     var selectedIndex by remember { mutableIntStateOf(0) }
 
@@ -35,7 +35,7 @@ fun HomeScreen(onLogout: () -> Unit) {
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             when (selectedIndex) {
-                0 -> MainHomeContent()
+                0 -> MainHomeContent(onNavigateToReserve = { selectedIndex = 4 })
                 1 -> PlaceholderScreen("Mis Reservas")
                 2 -> PlaceholderScreen("Historial")
                 3 -> ProfileScreen(onLogout = onLogout)
@@ -46,7 +46,7 @@ fun HomeScreen(onLogout: () -> Unit) {
 }
 
 @Composable
-fun MainHomeContent() {
+fun MainHomeContent(onNavigateToReserve: () -> Unit) {
     val user = FirebaseAuth.getInstance().currentUser
     val userName = user?.displayName ?: "Ivan Priala"
 
@@ -85,6 +85,10 @@ fun MainHomeContent() {
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        QuickReserveCard(onReserveClick = onNavigateToReserve)
 
         Spacer(modifier = Modifier.height(32.dp))
 
